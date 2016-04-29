@@ -52,7 +52,7 @@ namespace DownloadTest
 
             if (string.IsNullOrEmpty(logFilePath))
             {
-                Console.WriteLine(testResult);
+                Console.WriteLine($"{testResult}");
             }
             else
             {
@@ -141,6 +141,8 @@ namespace DownloadTest
             Console.WriteLine($"       URL: Valid URL with no authentication. Should be of a reasonably large size (e.g. an image).");
             Console.WriteLine($"       waitTime: time in seconds between gets.  Use zero to get one time and then exit.");
             Console.WriteLine($"       logFilePath (optional): file for results. If not specified then results are written to console.");
+            Console.WriteLine($"Output columns:");
+            Console.WriteLine($"       dateTime, url, status message, http response, duration in milliseconds, size in byes, speed in Mbps");
 
 #if DEBUG
             Console.WriteLine("Press Enter ...");
@@ -160,7 +162,15 @@ namespace DownloadTest
         public string message { get; set; }
         public override string ToString()
         {
-            return $"{startTime},{uri},{message},{(int)httpResponse},{duration},{sizeInBytes}";
+            return $"{startTime},{uri},{message},{(int)httpResponse},{duration.TotalMilliseconds},{sizeInBytes},{Math.Round(mbps,2)}";
+        }
+
+        public decimal mbps
+        {
+            get
+            {
+                return ((this.sizeInBytes / 1024 / 1024) / (Decimal)(this.duration.TotalMilliseconds / 1000)) * 8;
+            }
         }
     }
 }
