@@ -27,6 +27,10 @@ namespace DownloadTest
             ValidateArgs(args, out uri, out waitTimeSeconds, out logFilePath);
 
             _httpClient = new HttpClient();
+            _httpClient.DefaultRequestHeaders.CacheControl = new System.Net.Http.Headers.CacheControlHeaderValue();
+            _httpClient.DefaultRequestHeaders.CacheControl.NoCache = true;
+            _httpClient.DefaultRequestHeaders.CacheControl.NoStore = true;
+            _httpClient.DefaultRequestHeaders.CacheControl.MaxAge = new TimeSpan(0);
 
             if (waitTimeSeconds == 0)
             {
