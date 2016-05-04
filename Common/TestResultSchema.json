@@ -1,0 +1,40 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "http://jsonschema.net",
+  "type": "object",
+  "properties": {
+    "uri": {
+      "id": "http://jsonschema.net/uri",
+      "type": "string"
+    },
+    "httpResponse": {
+      "id": "http://jsonschema.net/httpResponse",
+      "type": "integer"
+    },
+    "startTime": {
+      "id": "http://jsonschema.net/startTime",
+      "type": "string"
+    },
+    "duration": {
+      "id": "http://jsonschema.net/duration",
+      "type": "string"
+    },
+    "sizeInBytes": {
+      "id": "http://jsonschema.net/sizeInBytes",
+      "type": "integer"
+    },
+    "message": {
+      "id": "http://jsonschema.net/message",
+      "type": "string"
+    },
+    "mbps": {
+      "id": "http://jsonschema.net/mbps",
+      "type": "number"
+    }
+  },
+  "required": [
+    "uri",
+    "startTime",
+    "message"
+  ]
+}

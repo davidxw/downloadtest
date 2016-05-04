@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartArguments>http://members.optusnet.com.au/optusost2/pinball_9mb.jpg 0</StartArguments>
+    <StartArguments>http://members.optusnet.com.au/optusost2/pinball_9mb.jpg 0 "" https://prod-01.australiaeast.logic.azure.com:443/workflows/11100ed73e504a64b5f330505d98b801/triggers/manual/run%3fapi-version=2015-08-01-preview&amp;sp=%252Ftriggers%252Fmanual%252Frun&amp;sv=1.0&amp;sig=PgnB-kX3Gbmq7XvIJqA-HdoJ172rye-kJadGjAvtyx8</StartArguments>
   </PropertyGroup>
   <PropertyGroup>
     <ProjectView>ProjectFiles</ProjectView>

@@ -6,3 +6,6 @@
 /DownloadTest/obj/Debug
 /DownloadTest/bin/Release
 /DownloadTest/obj/Release
+/Common/bin
+/Common/obj
+/packages/Newtonsoft.Json.8.0.3
