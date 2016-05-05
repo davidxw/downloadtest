@@ -3,6 +3,10 @@
   "id": "http://jsonschema.net",
   "type": "object",
   "properties": {
+    "clientId": {
+      "id": "http://jsonschema.net/uri",
+      "type": "string"
+    },
     "uri": {
       "id": "http://jsonschema.net/uri",
       "type": "string"
@@ -30,6 +34,14 @@
     "mbps": {
       "id": "http://jsonschema.net/mbps",
       "type": "number"
+    },
+    "durationInMilliseconds": {
+      "id": "http://jsonschema.net/mbps",
+      "type": "number"
+    },
+    "startTimeSql": {
+      "id": "http://jsonschema.net/message",
+      "type": "string"
     }
   },
   "required": [

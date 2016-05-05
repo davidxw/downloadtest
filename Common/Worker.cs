@@ -54,8 +54,10 @@ namespace Common
             return testResult;
         }
 
-        public async Task<HttpStatusCode> PostResult(Uri uri, TestResult result)
+        public async Task<HttpStatusCode> PostResult(Uri uri, TestResult result, string clientId)
         {
+            result.ClientId = clientId;
+
             // TODO: check if the Uri is IFFT, then use maker channel format for json body instead (value1=, value2= etc.)
             var content = new ByteArrayContent(Encoding.UTF8.GetBytes(result.ToJsonString()));
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");

@@ -63,7 +63,7 @@ namespace DownloadTest
 
             if (resultUri != null)
             {
-                var resultsPostResponse = await _timedHttpRequest.PostResult(resultUri, testResult);
+                var resultsPostResponse = await _timedHttpRequest.PostResult(resultUri, testResult, System.Environment.MachineName);
 
                 Console.WriteLine($"Results posted to {resultUri} - Http Status: {resultsPostResponse}");
             }

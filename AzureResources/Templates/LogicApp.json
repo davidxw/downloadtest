@@ -1,0 +1,298 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "logicAppName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "svcPlanName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "skuName": {
+      "type": "string",
+      "defaultValue": "F1",
+      "allowedValues": [
+        "F1",
+        "D1",
+        "B1",
+        "B2",
+        "B3",
+        "S1",
+        "S2",
+        "S3",
+        "P1",
+        "P2",
+        "P3",
+        "P4"
+      ],
+      "metadata": {
+        "description": "Describes plan's pricing tier and instance size. Check details at https://azure.microsoft.com/en-us/pricing/details/app-service/"
+      }
+    },
+    "skuCapacity": {
+      "type": "int",
+      "defaultValue": 1,
+      "minValue": 1,
+      "metadata": {
+        "description": "Describes plan's instance count"
+      }
+    },
+    "workflowSkuName": {
+      "type": "string",
+      "defaultValue": "Free",
+      "allowedValues": [
+        "Free",
+        "Basic",
+        "Standard",
+        "Premium"
+      ]
+    },
+    "testUri": {
+      "type": "string",
+      "minLength": 1,
+      "defaultValue": "https://azure.microsoft.com/en-us/status/feed/"
+    },
+    "downloadresultsserverAdminLogin": {
+      "type": "string",
+      "minLength": 1
+    },
+    "downloadresultsserverAdminLoginPassword": {
+      "type": "securestring"
+    },
+    "downloadresultsName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "downloadresultsCollation": {
+      "type": "string",
+      "minLength": 1,
+      "defaultValue": "SQL_Latin1_General_CP1_CI_AS"
+    },
+    "downloadresultsEdition": {
+      "type": "string",
+      "defaultValue": "Basic",
+      "allowedValues": [
+        "Basic",
+        "Standard",
+        "Premium"
+      ]
+    },
+    "downloadresultsRequestedServiceObjectiveName": {
+      "type": "string",
+      "defaultValue": "Basic",
+      "allowedValues": [
+        "Basic",
+        "S0",
+        "S1",
+        "S2",
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "metadata": {
+        "description": "Describes the performance level for Edition"
+      }
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2015-08-01",
+      "name": "[parameters('svcPlanName')]",
+      "type": "Microsoft.Web/serverfarms",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "AppServicePlan"
+      },
+      "sku": {
+        "name": "[parameters('skuName')]",
+        "capacity": "[parameters('skuCapacity')]"
+      },
+      "properties": {
+        "name": "[parameters('svcPlanName')]"
+      }
+    },
+    {
+      "type": "Microsoft.Logic/workflows",
+      "apiVersion": "2015-02-01-preview",
+      "name": "[parameters('logicAppName')]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "LogicApp"
+      },
+      "properties": {
+        "sku": {
+          "name": "[parameters('workflowSkuName')]",
+          "plan": {
+            "id": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('svcPlanName'))]"
+          }
+        },
+        "definition": {
+          "$schema": "http://schema.management.azure.com/providers/Microsoft.Logic/schemas/2014-12-01-preview/workflowdefinition.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {
+            "testURI": {
+              "type": "string",
+              "defaultValue": "[parameters('testUri')]"
+            }
+          },
+          "triggers": {
+            "manual": {
+              "type": "Manual",
+              "inputs": {
+                "schema": {
+                  "$schema": "http://json-schema.org/draft-04/schema#",
+                  "id": "http://jsonschema.net",
+                  "properties": {
+                    "clientId": {
+                      "id": "http://jsonschema.net/uri",
+                      "type": "string"
+                    },
+                    "duration": {
+                      "id": "http://jsonschema.net/duration",
+                      "type": "string"
+                    },
+                    "durationInMilliseconds": {
+                      "id": "http://jsonschema.net/mbps",
+                      "type": "number"
+                    },
+                    "httpResponse": {
+                      "id": "http://jsonschema.net/httpResponse",
+                      "type": "integer"
+                    },
+                    "mbps": {
+                      "id": "http://jsonschema.net/mbps",
+                      "type": "number"
+                    },
+                    "message": {
+                      "id": "http://jsonschema.net/message",
+                      "type": "string"
+                    },
+                    "sizeInBytes": {
+                      "id": "http://jsonschema.net/sizeInBytes",
+                      "type": "integer"
+                    },
+                    "startTime": {
+                      "id": "http://jsonschema.net/startTime",
+                      "type": "string"
+                    },
+                    "startTimeSql": {
+                      "id": "http://jsonschema.net/message",
+                      "type": "string"
+                    },
+                    "uri": {
+                      "id": "http://jsonschema.net/uri",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "uri",
+                    "startTime",
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "actions": {
+            "Insert_row": {
+              "type": "ApiConnection",
+              "inputs": {
+                "body": {
+                  "ClientId": "@{triggerBody()['clientId']}",
+                  "DurationInMilliseconds": "@triggerBody()['durationInMilliseconds']",
+                  "HttpResonse": "@{triggerBody()['httpResponse']}",
+                  "Mbps": "@triggerBody()['mbps']",
+                  "Message": "@{triggerBody()['message']}",
+                  "SizeInBytes": "@triggerBody()['sizeInBytes']",
+                  "StartTime": "@{triggerBody()['startTimeSql']}",
+                  "Uri": "@{triggerBody()['uri']}"
+                },
+                "host": {
+                  "api": {
+                    "runtimeUrl": "https://logic-apis-australiaeast.azure-apim.net/apim/sql"
+                  },
+                  "connection": {
+                    "name": "@parameters('$connections')['sql']['connectionId']"
+                  }
+                },
+                "method": "post",
+                "path": "/datasets/default/tables/@{encodeURIComponent(encodeURIComponent(string('[dbo].[Results]')))}/items"
+              },
+              "conditions": [ ]
+            }
+          },
+          "outputs": { }
+        },
+        "parameters": {
+          "$connections": {
+            "value": {
+              "sql": {
+                "connectionId": "/subscriptions/85ac5960-efc5-4749-971a-10dcca41340f/resourceGroups/downloadtestresultsrg/providers/Microsoft.Web/connections/sql-1",
+                "connectionName": "sql-1",
+                "id": "/subscriptions/85ac5960-efc5-4749-971a-10dcca41340f/providers/Microsoft.Web/locations/australiaeast/managedApis/sql"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "[variables('downloadresultsserverName')]",
+      "type": "Microsoft.Sql/servers",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2014-04-01-preview",
+      "dependsOn": [ ],
+      "tags": {
+        "displayName": "downloadresultsserver"
+      },
+      "properties": {
+        "administratorLogin": "[parameters('downloadresultsserverAdminLogin')]",
+        "administratorLoginPassword": "[parameters('downloadresultsserverAdminLoginPassword')]"
+      },
+      "resources": [
+        {
+          "name": "AllowAllWindowsAzureIps",
+          "type": "firewallrules",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2014-04-01-preview",
+          "dependsOn": [
+            "[concat('Microsoft.Sql/servers/', variables('downloadresultsserverName'))]"
+          ],
+          "properties": {
+            "startIpAddress": "0.0.0.0",
+            "endIpAddress": "0.0.0.0"
+          }
+        },
+        {
+          "name": "[parameters('downloadresultsName')]",
+          "type": "databases",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2014-04-01-preview",
+          "dependsOn": [
+            "[variables('downloadresultsserverName')]"
+          ],
+          "tags": {
+            "displayName": "downloadresults"
+          },
+          "properties": {
+            "collation": "[parameters('downloadresultsCollation')]",
+            "edition": "[parameters('downloadresultsEdition')]",
+            "maxSizeBytes": "1073741824",
+            "requestedServiceObjectiveName": "[parameters('downloadresultsRequestedServiceObjectiveName')]"
+          },
+          "resources": [
+
+
+          ]
+        }
+      ]
+    }
+  ],
+  "outputs": { },
+  "variables": {
+    "downloadresultsserverName": "[concat('downloadresultsserver', uniqueString(resourceGroup().id))]"
+  }
+}

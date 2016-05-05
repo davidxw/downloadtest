@@ -10,6 +10,7 @@ namespace Common
 {
     public class TestResult
     {
+        public string ClientId { get; set; }
         public Uri uri { get; set; }
         public HttpStatusCode httpResponse { get; set; }
         public DateTime startTime { get; set; }
@@ -18,7 +19,7 @@ namespace Common
         public string message { get; set; }
         public override string ToString()
         {
-            return $"{startTime},{uri},{message},{(int)httpResponse},{duration.TotalMilliseconds},{sizeInBytes},{Math.Round(mbps, 2)}";
+            return $"{startTime},{uri},{message},{(int)httpResponse},{durationInMilliseconds},{sizeInBytes},{Math.Round(mbps, 2)}";
         }
         public string ToJsonString()
         {
@@ -28,7 +29,23 @@ namespace Common
         {
             get
             {
-                return ((this.sizeInBytes / 1024 / 1024) / (Decimal)(this.duration.TotalMilliseconds / 1000)) * 8;
+                return ((this.sizeInBytes / 1024 / 1024) / (Decimal)(this.durationInMilliseconds / 1000)) * 8;
+            }
+        }
+
+        public double durationInMilliseconds
+        {
+            get
+            {
+                return duration != null ? duration.TotalMilliseconds : 0;
+            }
+        }
+
+        public string startTimeSql
+        {
+            get
+            {
+                return startTime.ToString("yyyy-MM-dd HH:mm:ss");
             }
         }
     }

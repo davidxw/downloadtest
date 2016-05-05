@@ -9,3 +9,6 @@
 /Common/bin
 /Common/obj
 /packages/Newtonsoft.Json.8.0.3
+/ResultsDatabase/obj/Debug
+/ResultsDatabase/bin/Debug
+/ResultsDatabase/ResultsDatabase.dbmdl
