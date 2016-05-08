@@ -1,0 +1,16 @@
+﻿<Page
+    x:Class="DownloadTestUI.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DownloadTestUI"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    DataContext="{Binding MainViewModel, Source={StaticResource Locator}}">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="10,98,0,0" VerticalAlignment="Top" Command="{Binding TestNowCommand}"/>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Margin="10,46,0,0" TextWrapping="Wrap" Text="{Binding DownloadUrl}" VerticalAlignment="Top" Width="340"/>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="10,156,0,0" TextWrapping="Wrap" Text="{Binding LastResult.mbps, Mode=OneWay}" VerticalAlignment="Top"/>
+    </Grid>
+</Page>
